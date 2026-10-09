@@ -5,10 +5,20 @@ This module contains functions to transform raw text into cleaned text
 suitable for natural language processing tasks like clustering.
 """
 
-from string import punctuation
+import string
 
 
 def load_stopwords(filepath='data/stopwords.txt'):
+    stopwords = set()
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip().lower()
+
+            if line != "":
+                stopwords.add(line)
+
+    return stopwords
     """
     Loads stopwords from a text file into a set.
 
@@ -30,13 +40,14 @@ def load_stopwords(filepath='data/stopwords.txt'):
     >>> stopwords = load_stopwords('data/stopwords.txt')
     >>> 'the' in stopwords
     True
-    """
+
     with open(filepath, 'r', encoding='utf-8') as f:
         # Read all lines, strip whitespace, and convert to set
         return set(line.strip().lower() for line in f if line.strip())
-
+    """
 
 def lowercase_text(text):
+    return text.lower()
     """
     Returns a text string with all characters lower-cased.
 
@@ -56,7 +67,10 @@ def lowercase_text(text):
     pass
 
 
-def remove_punctuation(text, punctuation=punctuation):
+def remove_punctuation(text, punctuation = string.punctuation):
+    clean_txt = ''.join(ch for ch in text if ch not in punctuation)
+
+    return clean_txt
     """
     Returns a text string without punctuation.
 
@@ -85,6 +99,8 @@ def remove_punctuation(text, punctuation=punctuation):
 
 
 def remove_newline(text):
+    text_no_nl = text.replace("\n", "")
+    return text_no_nl
     """
     Removes all newlines in a line of text.
 
@@ -109,6 +125,8 @@ def remove_newline(text):
 
 
 def split_text_into_words(text):
+    word_list = text.split(" ")
+    return word_list
     """
     Splits a text string into a word list.
 
@@ -133,6 +151,14 @@ def split_text_into_words(text):
 
 
 def remove_stopwords(word_lst, stopwords_set):
+    word_lst_no_stopwords = []
+
+    for word in word_lst:
+        if word not in stopwords_set:
+            word_lst_no_stopwords.append(word)
+
+    return word_lst_no_stopwords
+
     """
     Removes words from word_lst if they appear in the stopwords_set.
 
@@ -160,6 +186,15 @@ def remove_stopwords(word_lst, stopwords_set):
 
 
 def replace_names(word_lst, name_set, replacement_val):
+    word_lst_replaced_names = []
+
+    for word in word_lst:
+        if word in name_set:
+            word_lst_replaced_names.append(replacement_val)
+        else:
+            word_lst_replaced_names.append(word)
+
+    return word_lst_replaced_names
     """
     Replaces names in word_lst with replacement_val.
 
@@ -191,6 +226,8 @@ def replace_names(word_lst, name_set, replacement_val):
 
 
 def create_cleaned_textline_from_words(words):
+    new_string = " ".join(words)
+    return new_string
     """
     Makes a single string from a list of words.
 
